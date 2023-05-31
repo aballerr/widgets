@@ -1,5 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import useCurrencyBalance from 'hooks/useCurrencyBalance'
 import useNativeEvent from 'hooks/useNativeEvent'
 import useScrollbar from 'hooks/useScrollbar'
@@ -20,6 +19,7 @@ import {
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, FixedSizeList, FixedSizeListProps, ListChildComponentProps } from 'react-window'
+import { useGnosisContext } from 'stores'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
@@ -88,7 +88,7 @@ function TokenOption({ index, value, style }: TokenOptionProps) {
     e.ref = ref.current ?? undefined
   }
 
-  const { account } = useWeb3React()
+  const account = useGnosisContext()?.safeAddress
   const balance = useCurrencyBalance(account, value)
 
   return (

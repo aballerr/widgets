@@ -14,6 +14,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { DAI, USDC_MAINNET } from '../constants/tokens'
+import { GnosisContextProvider } from '../stores'
 import EventFeed, { Event, HANDLERS } from './EventFeed'
 import useOption from './useOption'
 import useProvider from './useProvider'
@@ -34,7 +35,7 @@ const tokenLists: Record<string, TokenInfo[] | string> = {
   Logoless: [TOKEN_WITH_NO_LOGO],
 }
 
-function Fixture() {
+function Fixture({ safeAddress, chainId }: { safeAddress?: string; chainId?: number }) {
   const [events, setEvents] = useState<Event[]>([])
   const useHandleEvent = useCallback(
     (name: string) =>
@@ -42,6 +43,7 @@ function Fixture() {
         setEvents((events) => [{ name, data }, ...events]),
     []
   )
+  const safeContextValue = safeAddress !== undefined && chainId !== undefined ? { safeAddress, chainId } : undefined
 
   const [convenienceFee] = useValue('convenienceFee', { defaultValue: 0 })
   const convenienceFeeRecipient = useOption('convenienceFeeRecipient', {
@@ -75,7 +77,7 @@ function Fixture() {
 
   const defaultNetwork = useOption('defaultChainId', {
     options: Object.keys(CHAIN_NAMES_TO_IDS),
-    defaultValue: 'mainnet',
+    defaultValue: 'polygon-mainnet',
   })
   const defaultChainId = defaultNetwork ? CHAIN_NAMES_TO_IDS[defaultNetwork] : undefined
 
@@ -118,6 +120,8 @@ function Fixture() {
         pageCentered,
       }}
       {...eventHandlers}
+      chainId={chainId ?? 0}
+      safeAddress={safeAddress ?? 'no address'}
     />
   )
 
@@ -126,11 +130,13 @@ function Fixture() {
   if (!window.frameElement) return widget
 
   return (
-    <Row flex align="start" justify="start" gap={0.5}>
-      {widget}
-      <EventFeed events={events} onClear={() => setEvents([])} />
-    </Row>
+    <GnosisContextProvider value={{ safeAddress: 'woo', chainId: 0 }}>
+      <Row flex align="start" justify="start" gap={0.5}>
+        {widget}
+        <EventFeed events={events} onClear={() => setEvents([])} />
+      </Row>
+    </GnosisContextProvider>
   )
 }
 
-export default <Fixture />
+export default <Fixture chainId={137} safeAddress="0xb949ff518B0cF6f71005FA2B5eE16e02Ab19eec9" />

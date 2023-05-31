@@ -1,9 +1,14 @@
+// const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+
 const isDevelopment =
   process.env.NODE_ENV === 'test' || // jest
   process.env.NODE_ENV === 'cosmos' // cosmos
 
 module.exports = {
   compact: false,
+  // resolve: {
+  //   fallback: {},
+  // },
   presets: [
     '@babel/preset-env',
     [
@@ -26,7 +31,14 @@ module.exports = {
       {
         root: ['src'],
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        stream: 'stream-browserify',
       },
     ],
+    // new NodePolyfillPlugin(),
   ],
+
+  // 'resolve.fallback': { stream: false },
+  // resolve: {
+  //   stream: require.resolve('stream-browserify'),
+  // },
 }

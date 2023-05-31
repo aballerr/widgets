@@ -1,6 +1,5 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { inputCss, StringInput } from 'components/Input'
 import { ResponsiveDialog } from 'components/ResponsiveDialog'
 import { useConditionalHandler } from 'hooks/useConditionalHandler'
@@ -11,6 +10,7 @@ import { Search } from 'icons'
 import { useAtomValue } from 'jotai/utils'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Field, swapEventHandlersAtom } from 'state/swap'
+import { useGnosisContext } from 'stores'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -40,7 +40,7 @@ const TokenSelectContainer = styled.div<{ $pageCentered: boolean }>`
 `
 
 function usePrefetchBalances() {
-  const { account } = useWeb3React()
+  const account = useGnosisContext()?.safeAddress
   const tokenList = useTokenList()
   const prefetchedTokenList = useRef<typeof tokenList>()
   useCurrencyBalances(account, tokenList !== prefetchedTokenList.current ? tokenList : undefined)
@@ -48,7 +48,7 @@ function usePrefetchBalances() {
 }
 
 function useAreBalancesLoaded(): boolean {
-  const { account } = useWeb3React()
+  const account = useGnosisContext()?.safeAddress
   const tokens = useTokenList()
   const native = useNativeCurrency()
   const currencies = useMemo(() => [native, ...tokens], [native, tokens])
@@ -89,13 +89,13 @@ export function TokenSelectDialogContent({ value, onSelect, onClose }: TokenSele
   useEffect(() => input.current?.focus({ preventScroll: true }), [input])
 
   const [options, setOptions] = useState<TokenOptionsHandle | null>(null)
-  const { chainId } = useWeb3React()
+  const chainId = useGnosisContext()?.chainId
   const listHasTokens = useMemo(() => list.some((token) => token.chainId === chainId), [chainId, list])
 
   if (!listHasTokens && isLoaded) {
     return (
       <Dialog color="container" onClose={onClose}>
-        <Header title={<Trans>Select token</Trans>} />
+        <Header title={<Trans>Select tokenn</Trans>} />
         <NoTokensAvailableOnNetwork />
       </Dialog>
     )

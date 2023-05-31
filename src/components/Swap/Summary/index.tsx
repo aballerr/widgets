@@ -184,7 +184,6 @@ export function ConfirmButton({
   const onAcknowledgeClick = useCallback(() => {
     onSwapPriceUpdateAck?.(ackTrade, trade)
     setAckTrade(trade)
-
     const wasInterrupted = triggerImpactSpeedbump()
     // Prevents immeadiate swap if price impact speedbump was triggered
     if (!wasInterrupted) onStartSwapFlow()
@@ -244,7 +243,7 @@ export function ConfirmButton({
 
   return (
     <ActionButton onClick={onStartSwapFlow} action={action} color={color ?? 'accent'} data-testid="swap-button">
-      <Trans>Swap</Trans>
+      <Trans>do the swap</Trans>
     </ActionButton>
   )
 }
@@ -299,7 +298,7 @@ export function SummaryDialog(props: SummaryDialogProps) {
         </SpeedBumpDialog>
       ) : (
         <PopoverBoundaryProvider value={boundary}>
-          <Header title={<Trans>Review swap</Trans>} />
+          <Header title={<Trans>Review swapp</Trans>} />
           <Body flex align="stretch">
             <Details {...props} />
           </Body>

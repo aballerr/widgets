@@ -2,9 +2,21 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@uniswap/widgets": ["index"]
+      "@uniswap/widgets": [
+        "index"
+      ],
+      "stream": [
+        "./node_modules/readable-stream"
+      ]
     },
-    "types": ["jest", "jest-extended"]
+    "types": [
+      "jest",
+      "jest-extended"
+    ]
   },
-  "include": ["src/", "test/", "e2e/"]
+  "include": [
+    "src/",
+    "test/",
+    "e2e/"
+  ]
 }

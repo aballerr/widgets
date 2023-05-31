@@ -2,6 +2,7 @@ import 'polyfills'
 
 import Swap, { SwapProps } from 'components/Swap'
 import Widget, { WidgetProps } from 'components/Widget'
+import { GnosisContextProps, GnosisContextProvider } from 'stores'
 
 export { getAssetsRepoURI, getNativeLogoURI, Logo, LogoUpdater, useLogo, useLogos } from './components/Logo'
 export type { Provider as EthersProvider } from '@ethersproject/abstract-provider'
@@ -76,12 +77,16 @@ export type { Theme } from 'theme'
 export { darkTheme, defaultTheme, lightTheme } from 'theme'
 export { invertTradeType, toTradeType } from 'utils/tradeType'
 
-export type SwapWidgetProps = SwapProps & WidgetProps
+export type SwapWidgetProps = SwapProps & WidgetProps & GnosisContextProps
 
 export function SwapWidget(props: SwapWidgetProps) {
   return (
-    <Widget {...props}>
-      <Swap {...props} />
-    </Widget>
+    <GnosisContextProvider value={{ safeAddress: props.safeAddress, chainId: props.chainId }}>
+      <Widget {...props}>
+        <Swap {...props} />
+      </Widget>
+    </GnosisContextProvider>
   )
 }
+
+export { GnosisContextProvider }

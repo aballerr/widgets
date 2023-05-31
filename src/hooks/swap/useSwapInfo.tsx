@@ -1,6 +1,5 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { QuoteType } from 'hooks/routing/types'
 import { useRouterTrade } from 'hooks/routing/useRouterTrade'
 import { useCurrencyBalances } from 'hooks/useCurrencyBalance'
@@ -16,6 +15,7 @@ import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useRe
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { Field, swapAtom, swapEventHandlersAtom } from 'state/swap'
 import { routerPreferenceAtom } from 'state/swap/settings'
+import { useGnosisContext } from 'stores'
 import { isExactInput } from 'utils/tradeType'
 import tryParseCurrencyAmount from 'utils/tryParseCurrencyAmount'
 
@@ -55,7 +55,9 @@ interface SwapInfo {
 
 /** Returns the best computed swap (trade/wrap). */
 function useComputeSwapInfo(): SwapInfo {
-  const { account, chainId, isActivating, isActive } = useWeb3React()
+  const account = useGnosisContext()?.safeAddress
+  const chainId = useGnosisContext()?.chainId
+
   const isSupported = useOnSupportedNetwork()
   const { type, amount, [Field.INPUT]: currencyIn, [Field.OUTPUT]: currencyOut } = useAtomValue(swapAtom)
   const isWrap = useIsWrap()
@@ -64,12 +66,11 @@ function useComputeSwapInfo(): SwapInfo {
   const chainIdOut = currencyOut?.chainId
   const tokenChainId = chainIdIn || chainIdOut
   const error = useMemo(() => {
-    if (!isActive) return isActivating ? ChainError.ACTIVATING_CHAIN : ChainError.UNCONNECTED_CHAIN
     if (!isSupported) return ChainError.UNSUPPORTED_CHAIN
     if (chainIdIn && chainIdOut && chainIdIn !== chainIdOut) return ChainError.MISMATCHED_TOKEN_CHAINS
     if (chainId && tokenChainId && chainId !== tokenChainId) return ChainError.MISMATCHED_CHAINS
     return
-  }, [chainId, chainIdIn, chainIdOut, isActivating, isActive, isSupported, tokenChainId])
+  }, [chainId, chainIdIn, chainIdOut, isSupported, tokenChainId])
 
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(amount, isExactInput(type) ? currencyIn : currencyOut),

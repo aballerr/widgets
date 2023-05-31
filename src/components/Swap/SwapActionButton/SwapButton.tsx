@@ -74,23 +74,22 @@ export default function SwapButton({ disabled }: { disabled: boolean }) {
         const response = await swapCallback?.()
         if (!response) return
 
+        console.log(response)
         // Set the block containing the response to the oldest valid block to ensure that the
         // completed trade's impact is reflected in future fetched trades.
-        response.response.wait(1).then((receipt) => {
-          setOldestValidBlock(receipt.blockNumber)
-        })
-
-        invariant(trade)
-        // onSubmit expects the TransactionInfo to be returned if the transaction was submitted.
-        return {
-          type: TransactionType.SWAP,
-          response: response.response,
-          tradeType: trade.tradeType,
-          trade,
-          slippageTolerance: slippage.allowed,
-        }
+        // response.response.wait(1).then((receipt) => {
+        //   setOldestValidBlock(receipt.blockNumber)
+        // })
+        // invariant(trade)
+        // // onSubmit expects the TransactionInfo to be returned if the transaction was submitted.
+        // return {
+        //   type: TransactionType.SWAP,
+        //   response: response.response,
+        //   tradeType: trade.tradeType,
+        //   trade,
+        //   slippageTolerance: slippage.allowed,
+        // }
       })
-
       // Only close the review modal if the swap submitted (ie no-throw).
       if (submitted) {
         setOpen(false)

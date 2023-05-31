@@ -36,19 +36,20 @@ export const routing = createApi({
             queryFulfilled,
             ({ data }) => data,
             (error) => {
-              const { error: queryError } = error
-              if (queryError && typeof queryError === 'object' && 'status' in queryError) {
-                const parsedError = queryError as FetchBaseQueryError
-                switch (parsedError.status) {
-                  case 'CUSTOM_ERROR':
-                  case 'FETCH_ERROR':
-                  case 'PARSING_ERROR':
-                    throw new WidgetError({ message: parsedError.error, error: parsedError })
-                  default:
-                    throw new WidgetError({ message: parsedError.status.toString(), error: parsedError })
-                }
-              }
-              throw new WidgetError({ message: 'Unknown error', error })
+              console.log(error)
+              // const { error: queryError } = error
+              // if (queryError && typeof queryError === 'object' && 'status' in queryError) {
+              //   const parsedError = queryError as FetchBaseQueryError
+              //   switch (parsedError.status) {
+              //     case 'CUSTOM_ERROR':
+              //     case 'FETCH_ERROR':
+              //     case 'PARSING_ERROR':
+              //       throw new WidgetError({ message: parsedError.error, error: parsedError })
+              //     default:
+              //       throw new WidgetError({ message: parsedError.status.toString(), error: parsedError })
+              //   }
+              // }
+              // throw new WidgetError({ message: 'Unknown error', error })
             }
           )
         )

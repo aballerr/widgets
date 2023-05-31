@@ -49,7 +49,7 @@ export default function Swap(props: SwapProps) {
   return (
     <>
       <SwapInfoProvider>
-        <Header title={<Trans>Swap</Trans>}>
+        <Header title={<Trans>Safe Swap</Trans>}>
           <Wallet disabled={props.hideConnectionUI} />
           <Settings />
         </Header>
